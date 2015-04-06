@@ -48,3 +48,6 @@ docs/_build/
 
 # Application specific
 libs/
+
+.idea
+target/

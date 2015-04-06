@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007 Google Inc.
+# Copyright 2015 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -16,7 +16,6 @@
 #
 
 import httplib2
-import logging
 import os
 import threading
 import urllib
@@ -29,13 +28,9 @@ from oauth2client.appengine import AppAssertionCredentials
 from apiclient.discovery import build
 import webapp2
 
-
 # Global variables
-DATA_FILE = "your-bucket-name/language_id.txt"
-MODEL_ID = "your-model-id"  # it can be the same as the app_id
 API_KEY = "your-api-key"
 PROJECT_ID = "your-numeric-project-id"
-
 
 # Set up the Prediction API service
 CREDENTIALS = AppAssertionCredentials(
@@ -54,11 +49,7 @@ def get_service():
 
 
 def predict_language(message):
-    payload = {"input": {"csvInstance": [message]}}
-    resp = get_service().trainedmodels().predict(id=MODEL_ID, body=payload,
-                                                 project=PROJECT_ID).execute()
-    prediction = resp["outputLabel"]
-    return prediction
+    return True
 
 
 def get_sentiment(message):
@@ -66,7 +57,7 @@ def get_sentiment(message):
     body = {"input": {"csvInstance": [message]}}
     output = get_service().hostedmodels().predict(
         body=body, hostedModelName="sample.sentiment",
-        project=414649711441).execute()
+        project=PROJECT_ID).execute()
     prediction = output["outputLabel"]
     # Model returns either "positive", "negative" or "neutral".
     if prediction == "positive":
@@ -95,26 +86,17 @@ class Greeting(ndb.Model):
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty(auto_now_add=True)
     positive = ndb.BooleanProperty(indexed=False)
-    language = ndb.StringProperty(indexed=False)
 
 
 class TrainModel(webapp2.RequestHandler):
     def get(self):
-        # train the model on the file
-        payload = {"id": MODEL_ID, "storageDataLocation": DATA_FILE}
-        get_service().trainedmodels().insert(body=payload,
-                                             project=PROJECT_ID).execute()
-        self.redirect("/checkmodel")
+        self.response.out.write('Not implemented!')
 
 
 class CheckModel(webapp2.RequestHandler):
     def get(self):
         # checks if a model is trained
-        self.response.out.write("Checking the status of the model.<br>")
-        status = get_service().trainedmodels().get(
-            id=MODEL_ID, project=PROJECT_ID).execute()
-        logging.info(repr(status))
-        self.response.out.write(status["trainingStatus"])
+        self.response.out.write("Not implemented!")
 
 
 class MainPage(webapp2.RequestHandler):
@@ -123,7 +105,6 @@ class MainPage(webapp2.RequestHandler):
         greetings_query = Greeting.query(
             ancestor=guestbook_key(guestbook_name)).order(-Greeting.date)
         greetings = greetings_query.fetch(10)
-
         if users.get_current_user():
             url = users.create_logout_url(self.request.uri)
             url_linktext = 'Logout'
@@ -151,7 +132,6 @@ class Guestbook(webapp2.RequestHandler):
                 email=users.get_current_user().email())
         greeting.content = self.request.get('content')
         greeting.positive = get_sentiment(greeting.content)
-        greeting.language = predict_language(greeting.content)
         greeting.put()
         self.redirect('/?' +
                       urllib.urlencode({'guestbook_name': guestbook_name}))

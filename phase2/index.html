@@ -3,14 +3,12 @@
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
-    {{ langauge_links }}
     {% for greeting in greetings %}
       {% if greeting.author %}
        <b>{{ greeting.author.email }}</b> wrote
       {% else %}
         An anonymous person wrote
       {% endif %}
-       in {{ greeting.language }}
       {% if greeting.positive %}
           <div style="background: #009933">
       {% else %}
@@ -22,8 +20,7 @@
     <form action="/sign" method="post">
       <div><textarea name="content" rows="3" cols="60"></textarea></div>
       <div><input type="submit" value="Sign Guestbook"></div><br>
-
-    <a href="{{ url }}">{{ url_linktext }}</a>
-
+    </form>
+     <a href="{{ url }}">{{ url_linktext }}</a>
   </body>
 </html>

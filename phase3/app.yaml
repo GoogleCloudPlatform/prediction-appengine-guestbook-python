@@ -8,13 +8,13 @@ handlers:
   static_files: favicon.ico
   upload: favicon\.ico
 
+- url: .*
+  script: main.APPLICATION
+
 - url: /checkmodel
   script: main.APPLICATION
   login: admin
 
 - url: /trainmodel
   script: main.APPLICATION
-  login: admin  
-
-- url: .*
-  script: main.APPLICATION
+  login: admin
