@@ -53,6 +53,7 @@ def get_service():
 def predict_language(message):
     return True
 
+
 # [START get_sentiment]
 def get_sentiment(message):
     """Returns true if the predicted sentiment is positive, false otherwise."""
@@ -68,6 +69,7 @@ def get_sentiment(message):
         return False
 # [END get_sentiment]
 
+
 def guestbook_key(guestbook_name=None):
     """Constructs an ndb key for a Guestbook entity with guestbook_name."""
     return ndb.Key('Guestbook', guestbook_name or 'default_guestbook')
@@ -77,6 +79,7 @@ class Author(ndb.Model):
     """A model representing an author."""
     identity = ndb.StringProperty(indexed=False)
     email = ndb.StringProperty(indexed=False)
+
 
 # [START greeting_model]
 class Greeting(ndb.Model):
@@ -122,6 +125,7 @@ class MainPage(webapp2.RequestHandler):
 
         path = os.path.join(os.path.dirname(__file__), 'index.html')
         self.response.out.write(template.render(path, template_values))
+
 
 # [START guestbook_handler]
 class Guestbook(webapp2.RequestHandler):

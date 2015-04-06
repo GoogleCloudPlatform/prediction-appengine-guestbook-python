@@ -34,7 +34,7 @@ import webapp2
 DATA_FILE = "your-bucket/language_id.txt"
 MODEL_ID = "your-model-id"  # it can be the same as the app_id
 API_KEY = "your-api-key"
-PROJECT_ID = 0 # put your numerical project-id here
+PROJECT_ID = 0  # put your numerical project-id here
 # [END global_variables]
 
 
@@ -52,6 +52,7 @@ def get_service():
         SERVICES.service = build("prediction", "v1.6", http=http,
                                  developerKey=API_KEY)
     return SERVICES.service
+
 
 # [START predict_language]
 def predict_language(message):
@@ -113,6 +114,7 @@ class TrainModel(webapp2.RequestHandler):
         self.redirect("/checkmodel")
 # [END train_model]
 
+
 # [START check_model]
 class CheckModel(webapp2.RequestHandler):
     def get(self):
@@ -146,6 +148,7 @@ class MainPage(webapp2.RequestHandler):
 
         path = os.path.join(os.path.dirname(__file__), 'index.html')
         self.response.out.write(template.render(path, template_values))
+
 
 # [START guestbook_handler]
 class Guestbook(webapp2.RequestHandler):
