@@ -48,8 +48,7 @@ def get_service():
     """Returns a prediction API service object local to the current thread."""
     http = CREDENTIALS.authorize(httplib2.Http(memcache))
     if not hasattr(SERVICES, "service"):
-        SERVICES.service = build("prediction", "v1.6", http=http,
-                                 developerKey=API_KEY)
+        SERVICES.service = build("prediction", "v1.6", http=http)
     return SERVICES.service
 
 

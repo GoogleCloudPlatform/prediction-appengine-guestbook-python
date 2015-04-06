@@ -28,6 +28,8 @@ from oauth2client.appengine import AppAssertionCredentials
 from apiclient.discovery import build
 import webapp2
 
+PROJECT_ID = 0 # your numeric project id
+
 # [START credentials_setup]
 # Set up the Prediction API service
 CREDENTIALS = AppAssertionCredentials(
@@ -41,8 +43,7 @@ def get_service():
     """Returns a prediction API service object local to the current thread."""
     http = CREDENTIALS.authorize(httplib2.Http(memcache))
     if not hasattr(SERVICES, "service"):
-        SERVICES.service = build("prediction", "v1.6", http=http,
-                                 developerKey=API_KEY)
+        SERVICES.service = build("prediction", "v1.6", http=http)
     return SERVICES.service
 
 
