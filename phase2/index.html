@@ -9,13 +9,16 @@
       {% else %}
         An anonymous person wrote
       {% endif %}
+    <!-- #[START greeting_template] -->
       {% if greeting.positive %}
           <div style="background: #009933">
       {% else %}
           <div style="background: #FF0000">
       {% endif %}
+    <!-- #[END greeting_template] -->
       <blockquote>{{ greeting.content|escape }}</blockquote></div><br>
     {% endfor %}
+
 
     <form action="/sign" method="post">
       <div><textarea name="content" rows="3" cols="60"></textarea></div>
