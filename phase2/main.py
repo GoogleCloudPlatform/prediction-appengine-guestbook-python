@@ -145,7 +145,7 @@ class Guestbook(webapp2.RequestHandler):
 # [END guestbook_handler]
 
 
-APPLICATION = webapp2.WSGIApplication([
+app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/sign', Guestbook),
     ('/trainmodel', TrainModel),

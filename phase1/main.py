@@ -114,7 +114,7 @@ class Guestbook(webapp2.RequestHandler):
                       urllib.urlencode({'guestbook_name': guestbook_name}))
 
 
-APPLICATION = webapp2.WSGIApplication([
+app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/sign', Guestbook),
     ('/trainmodel', TrainModel),

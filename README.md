@@ -3,9 +3,9 @@
 ## Phases
 This project is associated with this tutorial:
 
-https://cloud-dot-devsite.googleplex.com/appengine/articles/prediction_service_accounts
+https://cloud.google.com/appengine/articles/prediction_service_accounts
 
-Each directory represents a phase in the tutorial. phase1 is the basic sketon, phase2
+Each directory represents a phase in the tutorial. phase1 is the basic skeleton, phase2
 represents the project after Step 4 of the tutorial (sentiment analysis), phase3 represents
 the final code product of the tutorial and includes language detection.
 
