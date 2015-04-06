@@ -28,10 +28,6 @@ from oauth2client.appengine import AppAssertionCredentials
 from apiclient.discovery import build
 import webapp2
 
-# Global variables
-API_KEY = "your-api-key"
-PROJECT_ID = "your-numeric-project-id"
-
 # [START credentials_setup]
 # Set up the Prediction API service
 CREDENTIALS = AppAssertionCredentials(

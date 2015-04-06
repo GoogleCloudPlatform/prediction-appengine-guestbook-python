@@ -33,7 +33,6 @@ import webapp2
 # Global variables
 DATA_FILE = "your-bucket/language_id.txt"
 MODEL_ID = "your-model-id"  # it can be the same as the app_id
-API_KEY = "your-api-key"
 PROJECT_ID = 0  # put your numerical project-id here
 # [END global_variables]
 

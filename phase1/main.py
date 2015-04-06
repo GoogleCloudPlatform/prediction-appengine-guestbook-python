@@ -23,11 +23,6 @@ from google.appengine.api import users
 from google.appengine.ext.webapp import template
 import webapp2
 
-
-# Global variables
-API_KEY = "your-api-key"
-PROJECT_ID = "your-numeric-project-id"
-
 # Set up the Prediction API service
 # TODO: Fill in
 
