@@ -4,6 +4,7 @@
   </head>
   <body>
   {{ language_links }}
+  <!-- #[START greeting_template] -->
     {% for greeting in greetings %}
       {% if greeting.author %}
        <b>{{ greeting.author.email }}</b> wrote
@@ -18,6 +19,7 @@
       {% endif %}
       <blockquote>{{ greeting.content|escape }}</blockquote></div><br>
     {% endfor %}
+  <!-- #[END greeting_template] -->
 
     <form action="/sign" method="post">
       <div><textarea name="content" rows="3" cols="60"></textarea></div>

@@ -29,12 +29,13 @@ from oauth2client.appengine import AppAssertionCredentials
 from apiclient.discovery import build
 import webapp2
 
-
+# [START global_variables]
 # Global variables
-DATA_FILE = "bill-prediction-bucket/language_id.txt"
+DATA_FILE = "your-bucket/language_id.txt"
 MODEL_ID = "your-model-id"  # it can be the same as the app_id
 API_KEY = "your-api-key"
-PROJECT_ID = 47126304640
+PROJECT_ID = 0 # put your numerical project-id here
+# [END global_variables]
 
 
 # Set up the Prediction API service
@@ -52,7 +53,7 @@ def get_service():
                                  developerKey=API_KEY)
     return SERVICES.service
 
-
+# [START predict_language]
 def predict_language(message):
     payload = {"input": {"csvInstance": [message]}}
     logging.info("trying project id %d" % PROJECT_ID)
@@ -60,6 +61,7 @@ def predict_language(message):
                                                  project=PROJECT_ID).execute()
     prediction = resp["outputLabel"]
     return prediction
+# [END predict_language]
 
 
 def get_sentiment(message):
@@ -87,6 +89,7 @@ class Author(ndb.Model):
     email = ndb.StringProperty(indexed=False)
 
 
+# [START greeting_model]
 class Greeting(ndb.Model):
     """A model representing an individual Guestbook entry.
 
@@ -97,8 +100,10 @@ class Greeting(ndb.Model):
     date = ndb.DateTimeProperty(auto_now_add=True)
     positive = ndb.BooleanProperty(indexed=False)
     language = ndb.StringProperty(indexed=False)
+# [END greeting_model]
 
 
+# [START train_model]
 class TrainModel(webapp2.RequestHandler):
     def get(self):
         # train the model on the file
@@ -106,8 +111,9 @@ class TrainModel(webapp2.RequestHandler):
         get_service().trainedmodels().insert(body=payload,
                                              project=PROJECT_ID).execute()
         self.redirect("/checkmodel")
+# [END train_model]
 
-
+# [START check_model]
 class CheckModel(webapp2.RequestHandler):
     def get(self):
         # checks if a model is trained
@@ -116,6 +122,7 @@ class CheckModel(webapp2.RequestHandler):
             id=MODEL_ID, project=PROJECT_ID).execute()
         logging.info(repr(status))
         self.response.out.write(status["trainingStatus"])
+# [END check_model]
 
 
 class MainPage(webapp2.RequestHandler):
@@ -140,7 +147,7 @@ class MainPage(webapp2.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'index.html')
         self.response.out.write(template.render(path, template_values))
 
-
+# [START guestbook_handler]
 class Guestbook(webapp2.RequestHandler):
     def post(self):
         guestbook_name = self.request.get('guestbook_name')
@@ -156,6 +163,7 @@ class Guestbook(webapp2.RequestHandler):
         greeting.put()
         self.redirect('/?' +
                       urllib.urlencode({'guestbook_name': guestbook_name}))
+# [END guestbook_handler]
 
 
 APPLICATION = webapp2.WSGIApplication([
