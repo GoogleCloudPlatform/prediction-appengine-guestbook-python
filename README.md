@@ -1,14 +1,23 @@
 # prediction-appengine-guestbook-python
 
+## Phases
+This project is associated with this tutorial:
+
+https://cloud-dot-devsite.googleplex.com/appengine/articles/prediction_service_accounts
+
+Each directory represents a phase in the tutorial. phase1 is the basic sketon, phase2
+represents the project after Step 4 of the tutorial (sentiment analysis), phase3 represents
+the final code product of the tutorial and includes language detection.
+
 ## Prerequisites
 
 - Install Python-2.7 and virtualenv
 
 - Install google cloud SDK
 
-- Run scripts/setup.sh with the project directory as an argument.
+- Change into the directory of your choice and run
 
-  $ scripts/setup-google-api-client.sh .
+  $ pip install -r requirements.txt -t libs
 
 ## Register your application
 
