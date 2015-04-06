@@ -32,11 +32,13 @@ import webapp2
 API_KEY = "your-api-key"
 PROJECT_ID = "your-numeric-project-id"
 
+# [START credentials_setup]
 # Set up the Prediction API service
 CREDENTIALS = AppAssertionCredentials(
     scope='https://www.googleapis.com/auth/prediction' +
     ' https://www.googleapis.com/auth/devstorage.full_control')
 SERVICES = threading.local()
+# [END credentials_setup]
 
 
 def get_service():
@@ -76,7 +78,7 @@ class Author(ndb.Model):
     identity = ndb.StringProperty(indexed=False)
     email = ndb.StringProperty(indexed=False)
 
-
+# [START greeting_model]
 class Greeting(ndb.Model):
     """A model representing an individual Guestbook entry.
 
@@ -86,6 +88,7 @@ class Greeting(ndb.Model):
     content = ndb.StringProperty(indexed=False)
     date = ndb.DateTimeProperty(auto_now_add=True)
     positive = ndb.BooleanProperty(indexed=False)
+# [END greeting_model]
 
 
 class TrainModel(webapp2.RequestHandler):
@@ -120,7 +123,7 @@ class MainPage(webapp2.RequestHandler):
         path = os.path.join(os.path.dirname(__file__), 'index.html')
         self.response.out.write(template.render(path, template_values))
 
-
+# [START guestbook_handler]
 class Guestbook(webapp2.RequestHandler):
     def post(self):
         guestbook_name = self.request.get('guestbook_name')
@@ -135,6 +138,7 @@ class Guestbook(webapp2.RequestHandler):
         greeting.put()
         self.redirect('/?' +
                       urllib.urlencode({'guestbook_name': guestbook_name}))
+# [END guestbook_handler]
 
 
 APPLICATION = webapp2.WSGIApplication([
