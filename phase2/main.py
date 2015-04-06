@@ -53,7 +53,7 @@ def get_service():
 def predict_language(message):
     return True
 
-
+# [START get_sentiment]
 def get_sentiment(message):
     """Returns true if the predicted sentiment is positive, false otherwise."""
     body = {"input": {"csvInstance": [message]}}
@@ -66,7 +66,7 @@ def get_sentiment(message):
         return True
     else:
         return False
-
+# [END get_sentiment]
 
 def guestbook_key(guestbook_name=None):
     """Constructs an ndb key for a Guestbook entity with guestbook_name."""
