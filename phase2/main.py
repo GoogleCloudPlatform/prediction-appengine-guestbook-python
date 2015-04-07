@@ -28,8 +28,6 @@ from google.appengine.ext.webapp import template
 from oauth2client.client import GoogleCredentials
 import webapp2
 
-PROJECT_ID = 0  # your numeric project id
-
 # [START credentials_setup]
 # Set up the Prediction API service
 credentials = GoogleCredentials.get_application_default()
