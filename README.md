@@ -30,7 +30,6 @@ the final code product of the tutorial and includes language detection.
 
 - DATA_FILE
 - MODEL_ID
-- API_KEY
 - PROJECT_ID
 
 ## Deploy

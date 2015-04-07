@@ -24,7 +24,7 @@ from google.appengine.ext import ndb
 from google.appengine.api import users
 from google.appengine.api import memcache
 from google.appengine.ext.webapp import template
-from oauth2client.appengine import AppAssertionCredentials
+from oauth2client.client import GoogleCredentials
 from apiclient.discovery import build
 import webapp2
 
@@ -32,18 +32,22 @@ PROJECT_ID = 0  # your numeric project id
 
 # [START credentials_setup]
 # Set up the Prediction API service
-CREDENTIALS = AppAssertionCredentials(
-    scope='https://www.googleapis.com/auth/prediction' +
+credentials = GoogleCredentials.get_application_default()
+credentials = credentials.create_scoped(
+    'https://www.googleapis.com/auth/prediction'
     ' https://www.googleapis.com/auth/devstorage.full_control')
 SERVICES = threading.local()
 # [END credentials_setup]
 
+# dont change this
+HOSTED_PROJECT_ID = 414649711441
+
 
 def get_service():
     """Returns a prediction API service object local to the current thread."""
-    http = CREDENTIALS.authorize(httplib2.Http(memcache))
     if not hasattr(SERVICES, "service"):
-        SERVICES.service = build("prediction", "v1.6", http=http)
+        http = credentials.authorize(httplib2.Http(memcache))
+        SERVICES.service = build('prediction', 'v1.6', http=http)
     return SERVICES.service
 
 
@@ -57,7 +61,7 @@ def get_sentiment(message):
     body = {"input": {"csvInstance": [message]}}
     output = get_service().hostedmodels().predict(
         body=body, hostedModelName="sample.sentiment",
-        project=PROJECT_ID).execute()
+        project=HOSTED_PROJECT_ID).execute()
     prediction = output["outputLabel"]
     # Model returns either "positive", "negative" or "neutral".
     if prediction == "positive":

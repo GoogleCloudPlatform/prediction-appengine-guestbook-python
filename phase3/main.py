@@ -25,9 +25,11 @@ from google.appengine.ext import ndb
 from google.appengine.api import users
 from google.appengine.api import memcache
 from google.appengine.ext.webapp import template
-from oauth2client.appengine import AppAssertionCredentials
 from apiclient.discovery import build
 import webapp2
+
+from oauth2client.client import GoogleCredentials
+
 
 # [START global_variables]
 # Global variables
@@ -36,26 +38,31 @@ MODEL_ID = "your-model-id"  # it can be the same as the app_id
 PROJECT_ID = 0  # put your numerical project-id here
 # [END global_variables]
 
+# dont change this
+HOSTED_PROJECT_ID = 414649711441
+
 
 # Set up the Prediction API service
-CREDENTIALS = AppAssertionCredentials(
-    scope='https://www.googleapis.com/auth/prediction' +
+
+
+credentials = GoogleCredentials.get_application_default()
+credentials = credentials.create_scoped(
+    'https://www.googleapis.com/auth/prediction'
     ' https://www.googleapis.com/auth/devstorage.full_control')
 SERVICES = threading.local()
 
 
 def get_service():
     """Returns a prediction API service object local to the current thread."""
-    http = CREDENTIALS.authorize(httplib2.Http(memcache))
     if not hasattr(SERVICES, "service"):
-        SERVICES.service = build("prediction", "v1.6", http=http)
+        http = credentials.authorize(httplib2.Http(memcache))
+        SERVICES.service = build('prediction', 'v1.6', http=http)
     return SERVICES.service
 
 
 # [START predict_language]
 def predict_language(message):
     payload = {"input": {"csvInstance": [message]}}
-    logging.info("trying project id %d" % PROJECT_ID)
     resp = get_service().trainedmodels().predict(id=MODEL_ID, body=payload,
                                                  project=PROJECT_ID).execute()
     prediction = resp["outputLabel"]
@@ -68,7 +75,7 @@ def get_sentiment(message):
     body = {"input": {"csvInstance": [message]}}
     output = get_service().hostedmodels().predict(
         body=body, hostedModelName="sample.sentiment",
-        project=414649711441).execute()
+        project=HOSTED_PROJECT_ID).execute()
     prediction = output["outputLabel"]
     # Model returns either "positive", "negative" or "neutral".
     if prediction == "positive":
