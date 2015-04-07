@@ -38,7 +38,7 @@ MODEL_ID = "your-model-id"  # it can be the same as the app_id
 PROJECT_ID = 0  # put your numerical project-id here
 # [END global_variables]
 
-# dont change this
+# Don't change this. This is the fixed project ID for Prediction API hosted mode.
 HOSTED_PROJECT_ID = 414649711441
 
 

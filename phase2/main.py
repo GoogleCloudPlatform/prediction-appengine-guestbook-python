@@ -39,7 +39,7 @@ credentials = credentials.create_scoped(
 SERVICES = threading.local()
 # [END credentials_setup]
 
-# dont change this
+# Don't change this. This is the fixed project ID for Prediction API hosted mode.
 HOSTED_PROJECT_ID = 414649711441
 
 
