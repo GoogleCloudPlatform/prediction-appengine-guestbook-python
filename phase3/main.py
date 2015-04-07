@@ -1,6 +1,6 @@
 #!/usr/bin/env python
 #
-# Copyright 2007 Google Inc.
+# Copyright 2015 Google Inc.
 #
 # Licensed under the Apache License, Version 2.0 (the "License");
 # you may not use this file except in compliance with the License.
@@ -21,44 +21,52 @@ import os
 import threading
 import urllib
 
+from googleapiclient.discovery import build
 from google.appengine.ext import ndb
 from google.appengine.api import users
 from google.appengine.api import memcache
 from google.appengine.ext.webapp import template
-from oauth2client.appengine import AppAssertionCredentials
-from apiclient.discovery import build
+from oauth2client.client import GoogleCredentials
 import webapp2
 
-
+# [START global_variables]
 # Global variables
-DATA_FILE = "your-bucket-name/language_id.txt"
+DATA_FILE = "your-bucket/language_id.txt"
 MODEL_ID = "your-model-id"  # it can be the same as the app_id
-API_KEY = "your-api-key"
-PROJECT_ID = "your-numeric-project-id"
+PROJECT_ID = 0  # put your numerical project-id here
+# [END global_variables]
+
+# Don't change this.
+# This is the fixed project ID for Prediction API hosted mode.
+HOSTED_PROJECT_ID = 414649711441
 
 
 # Set up the Prediction API service
-CREDENTIALS = AppAssertionCredentials(
-    scope='https://www.googleapis.com/auth/prediction' +
+
+
+credentials = GoogleCredentials.get_application_default()
+credentials = credentials.create_scoped(
+    'https://www.googleapis.com/auth/prediction'
     ' https://www.googleapis.com/auth/devstorage.full_control')
 SERVICES = threading.local()
 
 
 def get_service():
     """Returns a prediction API service object local to the current thread."""
-    http = CREDENTIALS.authorize(httplib2.Http(memcache))
     if not hasattr(SERVICES, "service"):
-        SERVICES.service = build("prediction", "v1.6", http=http,
-                                 developerKey=API_KEY)
+        http = credentials.authorize(httplib2.Http(memcache))
+        SERVICES.service = build('prediction', 'v1.6', http=http)
     return SERVICES.service
 
 
+# [START predict_language]
 def predict_language(message):
     payload = {"input": {"csvInstance": [message]}}
     resp = get_service().trainedmodels().predict(id=MODEL_ID, body=payload,
                                                  project=PROJECT_ID).execute()
     prediction = resp["outputLabel"]
     return prediction
+# [END predict_language]
 
 
 def get_sentiment(message):
@@ -66,7 +74,7 @@ def get_sentiment(message):
     body = {"input": {"csvInstance": [message]}}
     output = get_service().hostedmodels().predict(
         body=body, hostedModelName="sample.sentiment",
-        project=414649711441).execute()
+        project=HOSTED_PROJECT_ID).execute()
     prediction = output["outputLabel"]
     # Model returns either "positive", "negative" or "neutral".
     if prediction == "positive":
@@ -86,6 +94,7 @@ class Author(ndb.Model):
     email = ndb.StringProperty(indexed=False)
 
 
+# [START greeting_model]
 class Greeting(ndb.Model):
     """A model representing an individual Guestbook entry.
 
@@ -96,8 +105,10 @@ class Greeting(ndb.Model):
     date = ndb.DateTimeProperty(auto_now_add=True)
     positive = ndb.BooleanProperty(indexed=False)
     language = ndb.StringProperty(indexed=False)
+# [END greeting_model]
 
 
+# [START train_model]
 class TrainModel(webapp2.RequestHandler):
     def get(self):
         # train the model on the file
@@ -105,8 +116,10 @@ class TrainModel(webapp2.RequestHandler):
         get_service().trainedmodels().insert(body=payload,
                                              project=PROJECT_ID).execute()
         self.redirect("/checkmodel")
+# [END train_model]
 
 
+# [START check_model]
 class CheckModel(webapp2.RequestHandler):
     def get(self):
         # checks if a model is trained
@@ -115,6 +128,7 @@ class CheckModel(webapp2.RequestHandler):
             id=MODEL_ID, project=PROJECT_ID).execute()
         logging.info(repr(status))
         self.response.out.write(status["trainingStatus"])
+# [END check_model]
 
 
 class MainPage(webapp2.RequestHandler):
@@ -140,6 +154,7 @@ class MainPage(webapp2.RequestHandler):
         self.response.out.write(template.render(path, template_values))
 
 
+# [START guestbook_handler]
 class Guestbook(webapp2.RequestHandler):
     def post(self):
         guestbook_name = self.request.get('guestbook_name')
@@ -155,9 +170,10 @@ class Guestbook(webapp2.RequestHandler):
         greeting.put()
         self.redirect('/?' +
                       urllib.urlencode({'guestbook_name': guestbook_name}))
+# [END guestbook_handler]
 
 
-APPLICATION = webapp2.WSGIApplication([
+app = webapp2.WSGIApplication([
     ('/', MainPage),
     ('/sign', Guestbook),
     ('/trainmodel', TrainModel),

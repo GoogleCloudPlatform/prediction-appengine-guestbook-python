@@ -3,27 +3,27 @@
     <link type="text/css" rel="stylesheet" href="/stylesheets/main.css" />
   </head>
   <body>
-    {{ langauge_links }}
     {% for greeting in greetings %}
       {% if greeting.author %}
        <b>{{ greeting.author.email }}</b> wrote
       {% else %}
         An anonymous person wrote
       {% endif %}
-       in {{ greeting.language }}
+    <!-- #[START greeting_template] -->
       {% if greeting.positive %}
           <div style="background: #009933">
       {% else %}
           <div style="background: #FF0000">
       {% endif %}
+    <!-- #[END greeting_template] -->
       <blockquote>{{ greeting.content|escape }}</blockquote></div><br>
     {% endfor %}
+
 
     <form action="/sign" method="post">
       <div><textarea name="content" rows="3" cols="60"></textarea></div>
       <div><input type="submit" value="Sign Guestbook"></div><br>
-
-    <a href="{{ url }}">{{ url_linktext }}</a>
-
+    </form>
+     <a href="{{ url }}">{{ url_linktext }}</a>
   </body>
 </html>
