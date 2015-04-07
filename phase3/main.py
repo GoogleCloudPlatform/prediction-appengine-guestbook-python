@@ -21,15 +21,13 @@ import os
 import threading
 import urllib
 
+from apiclient.discovery import build
 from google.appengine.ext import ndb
 from google.appengine.api import users
 from google.appengine.api import memcache
 from google.appengine.ext.webapp import template
-from apiclient.discovery import build
-import webapp2
-
 from oauth2client.client import GoogleCredentials
-
+import webapp2
 
 # [START global_variables]
 # Global variables
