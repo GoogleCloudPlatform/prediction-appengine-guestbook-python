@@ -21,7 +21,7 @@ import os
 import threading
 import urllib
 
-from apiclient.discovery import build
+from googleapiclient.discovery import build
 from google.appengine.ext import ndb
 from google.appengine.api import users
 from google.appengine.api import memcache
