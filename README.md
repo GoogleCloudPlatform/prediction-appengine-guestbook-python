@@ -40,6 +40,6 @@ the final code product of the tutorial and includes language detection.
 
 ## Deploy
 
-$ gcloud preview app deploy --project=${YOUR_PROJECT_NAME}
+$ gcloud app deploy --project=${YOUR_PROJECT_NAME}
 
 [1]: https://console.developers.google.com/project
